@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: messaging-service
+
+  artemis:
+    mode: native
+    broker-url: ${ARTEMIS_URI:tcp://192.168.1.210:9876}
+    user: admin
+    password: secret
+
+jms:
+  client-id: messaging-client
+  messaging:
+    topic: /messaging-topic-shared
+
+server:
+  port: 8080
+  shutdown: graceful
+
+microservices:
+  group-management-endpoint: group-management-service
+
+management:
+  endpoint:
+    health:
+      probes:
+        enabled: true
+  health:
+    livenessState:
+      enabled: true
+    readinessState:
+      enabled: true
