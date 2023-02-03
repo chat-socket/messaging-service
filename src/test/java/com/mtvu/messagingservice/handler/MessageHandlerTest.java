@@ -6,6 +6,7 @@ import com.mtvu.messagingservice.config.KafkaTestResourceLifecycleManager;
 import com.mtvu.messagingservice.domain.message.ChatMessage;
 import com.mtvu.messagingservice.domain.message.MessageType;
 import com.mtvu.messagingservice.domain.message.TextMessageContent;
+import com.mtvu.messagingservice.exception.NotFoundException;
 import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.junit.QuarkusTest;
 import io.smallrye.reactive.messaging.kafka.Record;
@@ -14,7 +15,6 @@ import io.smallrye.reactive.messaging.providers.connectors.InMemorySink;
 import io.smallrye.reactive.messaging.providers.connectors.InMemorySource;
 import org.eclipse.microprofile.reactive.messaging.Message;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
-import org.jboss.resteasy.reactive.ClientWebApplicationException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -45,10 +45,7 @@ class MessageHandlerTest {
         var group = client.getGroupById("direct:abc");
         Assertions.assertEquals("direct:abc", group.groupId());
 
-        // Currently, it seems to be an issue with Rest Client exception customization
-        // See: https://github.com/quarkusio/quarkus/issues/24185
-        // Therefore, we use the generic ClientWebApplicationException for now
-        Assertions.assertThrows(ClientWebApplicationException.class, () -> client.getGroupById("direct:def"));
+        Assertions.assertThrows(NotFoundException.class, () -> client.getGroupById("direct:def"));
     }
 
     @Test
